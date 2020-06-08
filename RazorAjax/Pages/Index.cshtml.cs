@@ -21,5 +21,14 @@ namespace RazorAjax.Pages
         {
 
         }
+
+        public IActionResult OnPost()
+        {
+            return Content("Received " + itemId);
+        
+        }
+
+        [BindProperty]
+        public int itemId { get; set; }
     }
 }

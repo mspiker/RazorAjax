@@ -1,9 +1,55 @@
 ﻿@page
 @model IndexModel
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery antiforgery
+@{ 
+    var token = antiforgery.GetAndStoreTokens(HttpContext).RequestToken;
+}
 @{
     ViewData["Title"] = "Home page";
 }
 
 <h1 class="display-4">Razor-Ajax Sample Application</h1>
-<p>This project will demonstrate how to use Ajax with Razor pages to solve the issue of posting back an entire page when you only need to send or request from the 
-    server a few bytes of data, thus making the end-user experience much greater.</p>
+<p>
+    This project will demonstrate how to use Ajax with Razor pages to solve the issue of posting back an entire page when you only need to send or request from the
+    server a few bytes of data, thus making the end-user experience much greater.
+</p>
+
+<div class="card">
+    <div class="card-header">
+        Post back to server
+    </div>
+    <div class="card-body">
+        <p>
+            In this example we will post back to the server with some data.  A typical use case might be to post back so we can update some
+            information on a record like item and qty on a shopping cart.
+        </p>
+        <div class="row">
+            <div class="col-sm-3">
+                <button class="btn btn-sm btn-dark" onclick="goo()">
+                    Post Data
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function goo() {
+            console.log('Calling goo');
+            $.ajax({
+                type: "POST",
+                url: "_Receiver",
+                data: { foo: "bar", cmd: "command here" },
+                headers: { "RequestVerificationToken": "@token" },
+                success: function (response) {
+                    console.log('Server responded with: ' + response);
+                },
+                error: function () {
+                    console.log('Error was encountered.');
+
+                }
+            });
+        }
+    </script>
+}
